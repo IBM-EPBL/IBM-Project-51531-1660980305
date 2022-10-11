@@ -1,0 +1,525 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "private_outputs": true,
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**1. Download the dataset**"
+      ],
+      "metadata": {
+        "id": "J6HCO09P45XK"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**2. Load the dataset**"
+      ],
+      "metadata": {
+        "id": "nzq7OLUS478O"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "-WYtqYliwNAu"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "import matplotlib as plt\n",
+        "\n",
+        "import warnings\n",
+        "warnings.filterwarnings(action = 'ignore')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data = pd.read_csv('/content/Churn_Modelling.csv')"
+      ],
+      "metadata": {
+        "id": "Tj7vVjmTyJ8k"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data.head()"
+      ],
+      "metadata": {
+        "id": "RTgy_gKEyy2Z"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data.dtypes"
+      ],
+      "metadata": {
+        "id": "NDLpC4yBy1fs"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data.select_dtypes(include=['int64','float64','Int64']).dtypes"
+      ],
+      "metadata": {
+        "id": "bfAkValPzDZ5"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**3. Perform Below Visualizations.**"
+      ],
+      "metadata": {
+        "id": "WoObJo7C5J6Y"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#univariate analysis\n",
+        "sns.set(style=\"whitegrid\")\n",
+        "sns.boxplot(y=data['CreditScore'])"
+      ],
+      "metadata": {
+        "id": "mKgk95OkzGfg"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#bivariate analysis\n",
+        "credit_score = data['CreditScore']\n",
+        "balance = data['Balance']\n",
+        "credit_score.dropna()\n",
+        "balance.dropna()\n",
+        "print(credit_score[2])\n",
+        "print(balance[2])\n",
+        "plt.scatter(credit_score , balance)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "dZj7F4GPzKcj"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#multivariate\n",
+        "result = pd.pivot_table(data=data, index='Geography', columns='Tenure',values='Age')\n",
+        "sns.heatmap(result, annot=True, cmap = 'RdYlGn_r').set_title('Multivariate analysis')\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "NgKBj07S0R-6"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**4.Perform descriptive statistics on the dataset.**"
+      ],
+      "metadata": {
+        "id": "D5JlSS1P1huw"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data.describe()"
+      ],
+      "metadata": {
+        "id": "0L__UGjJ1Vr1"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data['Age'].mode()"
+      ],
+      "metadata": {
+        "id": "1LoCm0Qp160f"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data[\"Age\"].mean()"
+      ],
+      "metadata": {
+        "id": "liRDfXgi1-XY"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "m=round(data[\"Age\"].mean())"
+      ],
+      "metadata": {
+        "id": "2ovgFp1M2A16"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data[\"Age\"].median()"
+      ],
+      "metadata": {
+        "id": "u_QMOYv72C0b"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "s=round(data['Age'].std())\n",
+        "print(s)"
+      ],
+      "metadata": {
+        "id": "p6jL5Ity2Ewz"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**5.Handle missing values**"
+      ],
+      "metadata": {
+        "id": "D0xlzmxI23MR"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#check missing values\n",
+        "data.isna().sum()"
+      ],
+      "metadata": {
+        "id": "JB7JoT2f2HEl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "CreditScores = data['CreditScore']\n",
+        "CreditScores"
+      ],
+      "metadata": {
+        "id": "HiILDTTg28vl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import matplotlib.pyplot as plt\n",
+        "plt.boxplot(data['CreditScore'],showmeans = True)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "_pky4cIx3AX0"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df = data[data['CreditScore'] >= 378]\n",
+        "for i in data['CreditScore']:\n",
+        "    if(i<378):\n",
+        "        print(i)\n",
+        "print(data['CreditScore'])"
+      ],
+      "metadata": {
+        "id": "5dr-Fh4o3Dwb"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "b = data['Balance']\n",
+        "b"
+      ],
+      "metadata": {
+        "id": "JpCaqYmU3G-y"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.boxplot(b)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "GnqZgK-23JdM"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "e= df['EstimatedSalary']\n",
+        "e"
+      ],
+      "metadata": {
+        "id": "ZG09-OvJ3L4p"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.boxplot(e) \n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "Hudu5tAl3g7D"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "a = data['Age']\n",
+        "plt.boxplot(a)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "P9BobRr73jYn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ageOutliers =  np.where(df['Age'] > 60)\n",
+        "ageOutliers"
+      ],
+      "metadata": {
+        "id": "0gomlJuU3mU2"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "da = data[data['Age'] <=60 ]\n",
+        "da"
+      ],
+      "metadata": {
+        "id": "XhUn2dfs3o6k"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**7.Check for Categorical columns and perform encoding.**"
+      ],
+      "metadata": {
+        "id": "pCt44AwS36y4"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data"
+      ],
+      "metadata": {
+        "id": "4hqscmyl3tQ-"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pandas.api.types import is_string_dtype\n",
+        "continuous=[]\n",
+        "categorical=[]\n",
+        "for data1 in data:\n",
+        "    if is_string_dtype(data[data1]):\n",
+        "        categorical.append(data1)\n",
+        "    else:\n",
+        "        continuous.append(data1)\n",
+        "categorical"
+      ],
+      "metadata": {
+        "id": "mOuXW-Mz3-tn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**8.Split the data into dependent and independent variables.**"
+      ],
+      "metadata": {
+        "id": "p1nBtXEi4IUC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x = data.iloc[:, 0:1].values\n",
+        "y = data.iloc[:, 1]\n",
+        "print(x)\n",
+        "print(y)"
+      ],
+      "metadata": {
+        "id": "xHe9sC6K4Bti"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**9.Scale the independent variables**"
+      ],
+      "metadata": {
+        "id": "31OVsAmj4PT3"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.preprocessing import StandardScaler\n",
+        "sc = StandardScaler()\n",
+        "X_train = sc.fit_transform(x)\n",
+        "X_test = sc.transform(x)"
+      ],
+      "metadata": {
+        "id": "LKDvQfCr4Mjj"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**10.Split the data into training and testing**"
+      ],
+      "metadata": {
+        "id": "MrrQH-EN4W1E"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.model_selection import train_test_split\n",
+        "X_train, X_test, y_train, y_test=train_test_split(data,y,test_size=0.2)\n",
+        "print(X_train)"
+      ],
+      "metadata": {
+        "id": "ZWY0y1xN4Tk_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(X_test)"
+      ],
+      "metadata": {
+        "id": "tvG9AP594bKf"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(y_train)"
+      ],
+      "metadata": {
+        "id": "jycTqVf14eu_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(y_test)"
+      ],
+      "metadata": {
+        "id": "lJETot5E4hLg"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "ZCRUCsPN4jX4"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
